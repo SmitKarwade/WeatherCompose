@@ -1,65 +1,69 @@
 package com.example.jetweather.screens
 
 
-import androidx.annotation.DrawableRes
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import coil3.compose.AsyncImage
 import com.example.jetweather.R
-import com.example.jetweather.model.ActualWeather
 import com.example.jetweather.model.WeatherData
 import com.example.jetweather.util.formatDate
-import com.example.jetweather.util.formatDateTime
 import com.example.jetweather.viewmodel.WeatherViewModel
 import com.example.jetweather.widgets.HumidityWindPressure
 import com.example.jetweather.widgets.SevenDayForecast
 import com.example.jetweather.widgets.WeatherAppBar
-import com.example.jetweather.widgets.WeatherInfoItem
 import com.example.jetweather.widgets.sunsetSunrise
 import com.example.jetweather.wrapper.DataOrException
-
-
 
 
 @Composable
 fun MainScreen(navController: NavController, viewModel: WeatherViewModel){
 
+    val savedState = navController.currentBackStackEntry?.savedStateHandle
+
+    var location by remember {
+        mutableStateOf("nagpur")
+    }
+
+    LaunchedEffect(savedState?.get("location")) {
+        savedState?.get<String>("location").let {
+            if (it != null) {
+                location = it
+            }
+        }
+    }
+
     val weatherData = produceState(
         initialValue = DataOrException<WeatherData, Boolean,  Exception>(loading = true)
     ) {
-        value = viewModel.getWeatherData("mumbai")
+        value = viewModel.getWeatherData(location)
     }.value
 
     Box(contentAlignment = Alignment.Center,
@@ -74,7 +78,7 @@ fun MainScreen(navController: NavController, viewModel: WeatherViewModel){
             }
         }
     }
-    }
+}
 
 
 
@@ -86,7 +90,10 @@ fun MainUI(weatherData: WeatherData, navController: NavController) {
     val backlineColor = colorResource(id = R.color.backline)
 
     Scaffold(topBar = {
-        WeatherAppBar(weatherData.city.name)
+        WeatherAppBar(weatherData.city.name,
+            onAddActionClicked = {
+                navController.navigate("search_screen")
+            })
     }, containerColor = Color.Transparent,
         modifier = Modifier.background(Brush.verticalGradient(listOf(backColor, backlineColor)))
         ) { insidePadding ->
@@ -152,6 +159,7 @@ fun MainContent(weatherData: WeatherData) {
         }
     }
 }
+
 // Alternate
 //@Composable
 //fun showData(viewModel: WeatherViewModel) {
