@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -14,11 +15,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.jetweather.R
 import com.example.jetweather.model.ActualWeather
 import com.example.jetweather.util.formatDate
@@ -44,6 +47,7 @@ fun SevenDayForecast(weatherList: List<ActualWeather>) {
     }
 }
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun weekForecast(date : String, day : String , night : String, iconEd : String, desc : String){
 
@@ -56,16 +60,17 @@ fun weekForecast(date : String, day : String , night : String, iconEd : String, 
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Text(text = date, fontSize = 16.sp, color = Color.White)
+        Text(text = date, fontSize = 16.sp, color = Color.White, modifier = Modifier.weight(1f))
 
-        AsyncImage(
+        GlideImage(
             model = iconUrl,
             contentDescription = "Weather Icon",
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(40.dp).weight(1f),
+            contentScale = ContentScale.Fit
         )
 
         Column(horizontalAlignment = Alignment.End) {
-            Text(text = desc, fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
+//            Text(text = desc, fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
             Text(
                 text = "$day° / $night°",
                 fontSize = 16.sp,
