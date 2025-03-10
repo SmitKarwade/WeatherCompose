@@ -64,8 +64,8 @@ dependencies {
     // coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
 
-    //coil
-    implementation("io.coil-kt.coil3:coil-compose:3.1.0")
+    //glide compose
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
