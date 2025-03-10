@@ -41,6 +41,7 @@ import com.example.jetweather.widgets.SevenDayForecast
 import com.example.jetweather.widgets.WeatherAppBar
 import com.example.jetweather.widgets.sunsetSunrise
 import com.example.jetweather.wrapper.DataOrException
+import kotlin.math.roundToInt
 
 
 @Composable
@@ -125,7 +126,7 @@ fun MainContent(weatherData: WeatherData) {
                 Text(text = formatDate(weatherData.list[0].dt), color = Color.White, fontSize = 16.sp)
 
                 Text(
-                    text = " ${weatherData.list[0].temp.max.toInt()}°",
+                    text = " ${weatherData.list[0].temp.day.roundToInt()}°",
                     modifier = Modifier.padding(4.dp),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 95.sp,
